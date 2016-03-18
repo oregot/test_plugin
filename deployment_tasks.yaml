@@ -1,0 +1,22 @@
+- id: fuel_test_plugin
+  type: group
+  role: [fuel_test_plugin]
+  tasks:
+    - hiera
+    - globals
+  required_for: [deploy_end]
+  requires: [deploy_start]
+  parameters:
+    strategy:
+      type: parallel
+
+- id: fuel_test_plugin-deployment
+  type: puppet
+  version: 2.0.0
+  groups: [primary-controller, controller]
+  required_for: [connectivity_tests, deploy_end]
+  requires: [deploy_start]
+  parameters:
+    puppet_manifest: "deploy.pp"
+    puppet_modules: "."
+    timeout: 3600
